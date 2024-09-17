@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core Model Calculator</title>
+</head>
+<body>
+    <h1>Core Model Calculator</h1>
+    <form id="coreForm">
+        <label for="coreModel">Enter Core Model (e.g., "EE25/13/7"):</label>
+        <input type="text" id="coreModel" name="coreModel" required>
+        <button type="submit">Calculate</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('coreForm').addEventListener('submit', function(e) {
+            e.preventDefault(); 
+
+            const coreModel = document.getElementById('coreModel').value;
+            fetch('/calculate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ coreModel: coreModel }),
+            })
+            .then(response => response.json())
+            .then(data => {
+               
+                document.getElementById('result').innerHTML = `
+                    <h2>Results for Core Model: ${coreModel}</h2>
+                    <p>Core Factors: ${data.coreFactors}</p>
+                    <p>Effective Volume (Ve): ${data.effectiveVolume}</p>
+                    <p>Effective Length (le): ${data.effectiveLength}</p>
+                    <p>Effective Area (Ae): ${data.effectiveArea}</p>
+                    <p>Minimum Area (An): ${data.minimumArea}</p>
+                `;
+            });
+        });
+    </script>
+</body>
+</html>
